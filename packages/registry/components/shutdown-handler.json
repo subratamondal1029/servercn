@@ -1,17 +1,21 @@
 {
-  "title": "Graceful Shutdown Handler",
+  "$schema": "https://servercn.vercel.app/schema/component.registry.json",
   "slug": "shutdown-handler",
-  "type": "component",
-  "stacks": ["express"],
-  "architectures": ["mvc", "feature"],
-  "templates": {
-    "express": {
-      "mvc": "components/shutdown-handler/express/mvc",
-      "feature": "components/shutdown-handler/express/feature"
+  "runtimes": {
+    "node": {
+      "frameworks": {
+        "express": {
+          "templates": {
+            "mvc": "shutdown-handler/mvc",
+            "feature": "shutdown-handler/feature"
+          },
+          "dependencies": {
+            "runtime": [],
+            "dev": []
+          },
+          "env": []
+        }
+      }
     }
-  },
-  "dependencies": {
-    "runtime": ["express"],
-    "dev": ["@types/node", "@types/express"]
   }
 }
