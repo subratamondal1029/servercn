@@ -195,7 +195,7 @@ The **Generate OTP/Token Helper Functions** component provides **cryptographical
 
 These utilities are essential for authentication workflows including email verification, password resets, two-factor authentication, and session management.
 
-All functions use Node.js's built-in `crypto` module to ensure **cryptographic randomness** and security.
+All functions use Node.js's built-in <Code>node:crypto</Code> module to ensure **cryptographic randomness** and security.
 
 ## Installation Guide
 
@@ -203,11 +203,13 @@ Install the component using the ServerCN CLI:
 
 <PackageManagerTabs command="npx servercn-cli add generate-otp-token" />
 
+---
+
 ## File Structure
 
-**MVC Structure:** <Code children="src/helpers/token.helpers.ts" />
+**MVC:** <Code children="src/helpers/token.helpers.ts" />
 
-**Feature Structure:** <Code children="src/shared/helpers/token.helpers.ts" />
+**Feature:** <Code children="src/shared/helpers/token.helpers.ts" />
 
 ## Core Functions
 
@@ -274,6 +276,8 @@ const { code, hashCode, expiresAt } = generateOTP(8, 10);
 - Two-factor authentication (2FA)
 - Password reset codes
 
+---
+
 ### 2. Verify OTP
 
 Verify an OTP code against its hash and expiration time.
@@ -298,6 +302,8 @@ const isValid = verifyOTP(
   "8958319959f69db8f78e94c0f3bba4df00f01744769c88d459ff189793bd4fa3"
 ); //? true if valid, false otherwise
 ```
+
+---
 
 ### 3. Generate Secure Random Token
 
@@ -326,6 +332,8 @@ const shortToken = generateSecureToken(16); // "a3f5c8e9d2b1f4a6c7e8d9b0a1f2c3d4
 - Session tokens
 - CSRF tokens
 
+---
+
 ### 4. Generate Hashed Token
 
 Generate a hashed token using SHA-256.
@@ -351,6 +359,8 @@ const hashedToken = generateHashedToken("my-token"); // "8958319959f69db8f78e94c
 - API keys
 - Session tokens
 - CSRF tokens
+
+---
 
 ### 5. Generate Token and Hashed Token
 
@@ -384,6 +394,8 @@ const { token, hashedToken } = generateTokenAndHashedToken("my-token");
 }
 ```
 
+---
+
 ### 6. Verify Hashed Token
 
 Verify a hashed token using SHA-256.
@@ -407,6 +419,8 @@ const isValid = verifyHashedToken(
   "8958319959f69db8f78e94c0f3bba4df00f01744769c88d459ff189793bd4fa3"
 ); // true if valid, false otherwise
 ```
+
+---
 
 ### 7. Generate UUID (Universally Unique Identifier)
 
@@ -432,6 +446,8 @@ const uuid = generateUUID(); // "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 - Request/transaction IDs
 - Session IDs
 - File upload identifiers
+
+---
 
 ### 8. Generate Alphanumeric Token
 
@@ -468,6 +484,8 @@ const shortToken = generateAlphanumericToken(16); // "Kx7mP9qR2sT4vW6y"
 - Referral codes
 - Promo codes
 
+---
+
 ### 9. Generate URL-Safe Token
 
 Generate a cryptographically secure URL-safe token (base64url encoding).
@@ -498,6 +516,8 @@ const token = generateURLSafeToken(); // "Kx7mP9qR2sT4vW6yZ8aB1cD3eF5gH7jL9nM0pQ
 - Magic link authentication
 - Share links
 
+---
+
 ### 10. Generate Numeric Code
 
 Generate a cryptographically secure numeric code (alternative to OTP with better distribution).
@@ -524,6 +544,8 @@ export function generateNumericCode(length: number = 6): string {
 const code = generateNumericCode(); // "847392"
 const longCode = generateNumericCode(10); // "8473920156"
 ```
+
+---
 
 ## Complete Implementation
 
@@ -795,83 +817,6 @@ export async function createInviteCode(userId: string, maxUses: number = 1) {
 
   return inviteCode;
 }
-```
-
-## Security Best Practices
-
-### 1. Always Use Crypto Module
-
-❌ **Don't use Math.random():**
-
-```ts
-// INSECURE - Predictable
-function generateOTP() {
-  return Math.floor(Math.random() * 1000000).toString();
-}
-```
-
-✅ **Use crypto.randomInt() or crypto.randomBytes():**
-
-```ts
-// SECURE - Cryptographically random
-function generateOTP() {
-  return crypto.randomInt(0, 1000000).toString().padStart(6, "0");
-}
-```
-
-### 2. Hash Tokens Before Storing
-
-Always hash tokens before storing them in the database:
-
-```ts
-import crypto from "node:crypto";
-
-// Hash the token
-const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-
-// Store only the hash
-await TokenModel.create({ tokenHash: hashedToken });
-```
-
-### 3. Set Expiration Times
-
-Always set expiration times for tokens and OTPs:
-
-```ts
-const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
-```
-
-### 4. Implement Rate Limiting
-
-Prevent abuse by limiting token generation:
-
-```ts
-// Allow only 3 OTP requests per hour per user
-const recentOTPs = await Otp.countDocuments({
-  userId,
-  createdAt: { $gte: new Date(Date.now() - 60 * 60 * 1000) }
-});
-
-if (recentOTPs >= 3) {
-  throw new Error("Too many OTP requests. Please try again later.");
-}
-```
-
-### 5. Use Appropriate Token Lengths
-
-- **OTP**: 6 digits (1 million combinations)
-- **Short tokens**: 16 bytes (32 hex characters)
-- **Standard tokens**: 32 bytes (64 hex characters)
-- **High-security tokens**: 64 bytes (128 hex characters)
-
-### 6. Never Log Sensitive Tokens
-
-```ts
-// ❌ Don't log tokens
-console.log("Generated OTP:", otp);
-
-// ✅ Log only metadata
-console.log("OTP generated for user:", userId);
 ```
 
 ## Related Components

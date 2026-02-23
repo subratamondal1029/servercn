@@ -298,24 +298,6 @@ export const syncExchangeRates = cron.schedule("0 * * * *", async () => {
 });
 ```
 
-## Best Practices
-
-### 1. Error Handling
-
-Always wrap your job logic in **try-catch** blocks to prevent an error in one job from crashing your entire Node.js process.
-
-### 2. Logging
-
-Use a proper logger (like Winston or Pino) inside your jobs to track execution history and troubleshoot failures.
-
-### 3. Resource Management
-
-If a job performs heavy database operations, ensure it doesn't block the main event loop. Consider offloading very large tasks to a separate worker process or a dedicated queue system (like BullMQ) if needed.
-
-### 4. Idempotency
-
-Ensure your jobs are idempotent—running the same job twice (due to a restart or overlap) should not cause data corruption or duplicate side effects.
-
 ## Summary
 
 The **Background Jobs** component using <Code children="node-cron" /> is a powerful and lightweight solution for adding scheduled tasks to your ServerCN application without the complexity of a full-blown message queue.

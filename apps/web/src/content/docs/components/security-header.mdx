@@ -96,6 +96,90 @@ Install the component using the ServerCN CLI:
 
 <PackageManagerTabs command="npx servercn-cli add security-header" />
 
+## Threat Model Coverage
+
+Below is a precise breakdown of each header, the associated attack vector, and the mitigation strategy.
+
+### 1. X-Content-Type-Options: nosniff
+
+#### Attack
+Browsers attempt MIME sniffing and may execute JavaScript disguised as another file type (e.g., malicious JS embedded in an image upload).
+
+#### Mitigation
+Forces browsers to strictly honor the declared <Code>Content-Type</Code> header.
+
+---
+
+### 2. X-Frame-Options: DENY (or SAMEORIGIN)
+
+#### Attack (Clickjacking)
+An attacker embeds your application inside a malicious <Code>iframe</Code> and overlays invisible UI elements to trick users into clicking privileged actions.
+
+#### Mitigation
+Prevents your application from being framed.
+
+---
+
+### 3. X-XSS-Protection: 0
+
+#### History & Risk
+Legacy browsers implemented a reflective XSS filter that was unreliable and, in some cases, exploitable.
+
+#### Modern Best Practice
+Disable it (0) and rely on a properly configured Content-Security-Policy (CSP).
+
+---
+
+### 4. Strict-Transport-Security (HSTS)
+
+#### Attack (Protocol Downgrade / MITM)
+An attacker forces HTTPS traffic to downgrade to HTTP.
+
+#### Mitigation
+Instructs the browser to only use HTTPS for your domain for a defined duration.
+
+---
+
+### 5. Content-Security-Policy (CSP)
+
+#### Attack (XSS Injection)
+An attacker injects malicious <Code children="<script>" /> tags into your pages.
+
+#### Mitigation
+Whitelists allowed script, style, image, and connection sources.
+
+---
+
+### 6. Referrer-Policy
+
+#### Data Leakage Risk
+The Referer header may expose full URLs including tokens, internal paths, or identifiers when navigating away.
+
+#### Mitigation
+Controls how much URL information is shared with external origins.
+
+---
+
+### 7. Permissions-Policy
+
+#### Attack Surface Expansion
+Malicious embedded contexts (iframes) attempt to access camera, microphone, geolocation, etc.
+
+#### Mitigation
+Explicitly disables browser capabilities your application does not require.
+
+---
+
+### 8. Remove X-Powered-By
+
+#### Information Disclosure
+X-Powered-By: Express reveals your framework stack.
+
+#### Mitigation
+Disable to reduce reconnaissance surface area.
+
+---
+
 ## What This Component Solves
 
 Manually configuring security headers can be error-prone and tedious. This component standardizes:
@@ -105,15 +189,18 @@ Manually configuring security headers can be error-prone and tedious. This compo
 - **Content Type Sniffing**: Prevents browsers from trying to guess the content type.
 - **CORS Policy**: Configures which domains can access your API.
 
+
 ## Implementation
 
 ### 1. Middleware Configuration
 
 The component provides a <Code children="configureSecurityHeaders" /> function that you should call during your Express app initialization.
 
-**MVC Structure:** <Code children="src/middlewares/security-header.ts" />
+**MVC:** <Code children="src/middlewares/security-header.ts" />
 
-**Feature Structure:** <Code children="src/shared/middlewares/security-header.ts" />
+**Feature:** <Code children="src/shared/middlewares/security-header.ts" />
+
+#### Minimal
 
 ```ts
 import cors from "cors";
@@ -141,11 +228,77 @@ export const configureSecurityHeaders = (app: Express) => {
 };
 ```
 
+#### Advanced
+
+```ts
+import cors from "cors";
+import { Express } from "express";
+import helmet from "helmet";
+
+export const configureSecurityHeaders = (app: Express) => {
+  // Remove framework fingerprint
+  app.disable("x-powered-by");
+
+  // Helmet with explicit security policy configuration
+  app.use(
+    helmet({
+      xssFilter: false, // disable legacy X-XSS-Protection
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'"],
+          imgSrc: ["'self'", "data:"],
+          connectSrc: ["'self'"],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          upgradeInsecureRequests: []
+        }
+      },
+      hsts: {
+        maxAge: 63072000, // 2 years
+        includeSubDomains: true,
+        preload: true
+      },
+      referrerPolicy: {
+        policy: "strict-origin-when-cross-origin"
+      },
+      permissionsPolicy: {
+        features: {
+          camera: [],
+          microphone: [],
+          geolocation: [],
+          payment: []
+        }
+      }
+    })
+  );
+
+  // CORS configuration
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN || "*",
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
+    })
+  );
+
+  // Explicit header hardening overrides
+  app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-XSS-Protection", "0"); // modern best practice
+    next();
+  });
+};
+```
+
 ### 2. Usage in App
 
 Import and use the configuration in your main <Code children="app.ts" /> file.
 
-```ts
+```ts {2, 7}
 import express from "express";
 import { configureSecurityHeaders } from "./middlewares/security-header";
 
@@ -158,11 +311,13 @@ app.use(express.json());
 // ... rest of your app
 ```
 
-## Best Practices
 
-### CORS Configuration
 
-In production, always replace <Code children="*" /> with your actual frontend domain to prevent unauthorized access.
+## Production Recommendations
+
+### 1. Restrict CORS Origin
+
+Never use <Code children="*" /> in production for authenticated APIs.
 
 ```ts
 cors({
@@ -171,9 +326,10 @@ cors({
 });
 ```
 
-### Content Security Policy (CSP)
+### 2. Customize CSP for External Providers
 
-By default, Helmet sets a basic CSP. If you need to load resources from external domains (like Google Fonts or Cloudinary), you should customize the Helmet configuration:
+If using CDNs or third-party services:
+
 
 ```ts
 app.use(
@@ -189,6 +345,23 @@ app.use(
 );
 ```
 
-### Verification
+
+### 3. Enable HSTS Only After HTTPS Is Stable
+
+Once deployed over HTTPS permanently, consider submitting to the HSTS preload list.
+
+## Verification
 
 You can verify your security headers using online tools like [SecurityHeaders.com](https://securityheaders.com/).
+
+
+## Security Outcome
+
+- With this configuration, your ServerCN Express application gains:
+- Hardened XSS defense
+- Clickjacking prevention
+- HTTPS enforcement
+- Reduced fingerprinting
+- Controlled cross-origin access
+- Minimized browser feature abuse
+- Referrer data protection
