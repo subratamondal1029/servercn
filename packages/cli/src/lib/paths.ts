@@ -17,7 +17,7 @@ export function resolveTargetDir(folderName: string) {
 export const paths = {
   root: getServercnRoot(),
   registry: (f?: RegistryType) =>
-    path.join(getServercnRoot(), "registry", f ? `${f}s` : ""),
+    path.join(getServercnRoot(), "registry", f ? `${f}` : ""),
   templates: () => path.join(getServercnRoot(), "templates"),
   targets: (folderName: string) => resolveTargetDir(folderName)
 };

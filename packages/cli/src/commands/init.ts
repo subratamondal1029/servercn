@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import fs from "fs-extra";
 import path from "path";
 import prompts from "prompts";
 import { execa } from "execa";
-import ora from "ora";
 import { logger } from "@/utils/logger";
 import { APP_NAME, SERVERCN_CONFIG_FILE } from "@/constants/app.constants";
 import { getRegistry } from "@/lib/registry";
-import { cloneRegistryTemplate, copyTemplate } from "@/lib/copy";
+import { copyTemplate } from "@/lib/copy";
 import { installDependencies } from "@/lib/install-deps";
 import type { AddOptions, RegistryFoundation } from "@/types";
 import { tsConfig } from "@/configs/ts.config";
@@ -165,11 +165,6 @@ export async function init(foundation?: string, options: AddOptions = {}) {
         `export default ${JSON.stringify(commitlintConfig, null, 2)}`
       );
       const filterEnvs = baseConfig?.env?.filter((env: string) => env !== "") || [];
-
-      console.log({
-        filterEnvs,
-        env: baseConfig.env
-      })
 
       if (filterEnvs?.length > 0) {
         updateEnvKeys({
