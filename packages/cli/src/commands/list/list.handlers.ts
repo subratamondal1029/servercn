@@ -13,7 +13,7 @@ type listOverviewType = {
   command: string;
   types: {
     type: RegistryType;
-    shortcut: "cp" | "bp" | "tl" | "sc" | "fd";
+    alias: "cp" | "bp" | "tl" | "sc" | "fd";
     total: number;
     command: string;
   }[];
@@ -39,31 +39,31 @@ export async function listOverview(options: listOptionType) {
     types: [
       {
         type: "component",
-        shortcut: "cp",
+        alias: "cp",
         total: components.length,
         command: "npx servercn-cli list cp"
       },
       {
         type: "blueprint",
-        shortcut: "bp",
+        alias: "bp",
         total: blueprints.length,
         command: "npx servercn-cli list bp"
       },
       {
         type: "foundation",
-        shortcut: "fd",
+        alias: "fd",
         total: foundations.length,
         command: "npx servercn-cli list fd"
       },
       {
         type: "tooling",
-        shortcut: "tl",
+        alias: "tl",
         total: toolings.length,
         command: "npx servercn-cli list tl"
       },
       {
         type: "schema",
-        shortcut: "sc",
+        alias: "sc",
         total: schemas.length,
         command: "npx servercn-cli list sc"
       }
@@ -82,7 +82,7 @@ export async function listOverview(options: listOptionType) {
   console.log(
     `${highlighter.create(`
 ───────────────────────────────────────────────────────────
-│ Type         │ Shortcut │ Total │ Command               │
+│ Type         │ alias │ Total │ Command               │
 ───────────────────────────────────────────────────────────
 │ Components   │   cp     │  ${padStart(components.length)}   │ npx servercn-cli list cp  │ 
 │ Blueprints   │   bp     │  ${padStart(blueprints.length)}   │ npx servercn-cli list bp  │
@@ -93,8 +93,8 @@ export async function listOverview(options: listOptionType) {
   );
   logger.log(`
  Explore:
- npx servercn-cli list <type | shortcut>
- npx servercn-cli list <type | shortcut> --json
+ npx servercn-cli list <type | alias>
+ npx servercn-cli list <type | alias> --json
 
  Examples:
  npx servercn-cli list components
