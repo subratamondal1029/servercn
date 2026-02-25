@@ -17,6 +17,11 @@ export type RuntimeType = (typeof RuntimeList)[number];
 export type LanguageType = (typeof LanguageList)[number];
 export type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 
+export type RegistryData = {
+  type: RegistryType;
+  slug: string;
+};
+
 export type ConflictStrategy = "skip" | "overwrite" | "error";
 export interface AddOptions {
   type?: RegistryType;
@@ -41,16 +46,16 @@ export type StackConfig = {
   architecture: Architecture;
 };
 export interface DatabaseConfig {
-  type: DatabaseType;
-  orm: OrmType;
+  engine: DatabaseType;
+  adapter: OrmType;
 }
 export interface IServerCNConfig {
   $schema: string;
   version: string;
   project: {
     root: string;
-    srcDir: string;
     type: "backend" | "fullstack";
+    packageManager: PackageManager;
   };
   stack: StackConfig;
   database: null | DatabaseConfig;
@@ -64,6 +69,7 @@ export type InstallOptions = {
   runtime?: string[];
   dev?: string[];
   cwd: string;
+  packageManager?: PackageManager;
 };
 
 export type DependencySet = {
@@ -152,7 +158,7 @@ export interface RegistryFoundation extends IRegistryCommon {
 //? registry:schema
 export interface SchemaOrm {
   templates: Record<string, ArchitectureSet>;
-  dependencies: DependencySet
+  dependencies: DependencySet;
 }
 
 export interface SchemaDatabase {
@@ -163,7 +169,7 @@ export interface SchemaFramework {
   databases: Record<DatabaseType, SchemaDatabase>;
 }
 export interface NodeSchemaRuntime {
-  frameworks: Record<FrameworkType, SchemaFramework>
+  frameworks: Record<FrameworkType, SchemaFramework>;
 }
 
 export interface RegistrySchema extends IRegistryCommon {
@@ -175,7 +181,7 @@ export interface RegistrySchema extends IRegistryCommon {
 //? registry:blueprint
 export interface BlueprintOrm {
   templates: ArchitectureSet;
-  dependencies: DependencySet
+  dependencies: DependencySet;
 }
 
 export interface BlueprintDatabase {
@@ -186,7 +192,7 @@ export interface BlueprintFramework {
   databases: Record<DatabaseType, BlueprintDatabase>;
 }
 export interface NodeBlueprinttime {
-  frameworks: Record<FrameworkType, BlueprintFramework>
+  frameworks: Record<FrameworkType, BlueprintFramework>;
 }
 
 export interface RegistryBlueprint extends IRegistryCommon {
@@ -197,11 +203,9 @@ export interface RegistryBlueprint extends IRegistryCommon {
 
 //? registry:tooling
 export interface RegistryTooling extends IRegistryCommon {
-  templates: Record<string, string>,
+  templates: Record<string, string>;
   dependencies?: DependencySet;
 }
-
-s.runtimes.node.frameworks.express.databases.mongodb.orms.mongoose.t
 
 export interface RegistryMap {
   component: RegistryComponent;
@@ -212,6 +216,4 @@ export interface RegistryMap {
 }
 
 export type RegistryItem = RegistryMap[keyof RegistryMap];
-export type RuntimeRegistryItem =
-  | RegistryComponent
-  | RegistryBlueprint
+export type RuntimeRegistryItem = RegistryComponent | RegistryBlueprint;
