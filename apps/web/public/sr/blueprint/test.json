@@ -1,0 +1,41 @@
+{
+  "slug": "test",
+  "runtimes": {
+    "node": {
+      "frameworks": {
+        "express": {
+          "databases": {
+            "mongodb": {
+              "orms": {
+                "mongoose": {
+                  "dependencies": {
+                    "runtime": [],
+                    "dev": []
+                  },
+                  "architectures": {
+                    "mvc": {
+                      "files": [
+                        {
+                          "path": "src/akkal.ts",
+                          "content": "//? hello akkal"
+                        }
+                      ]
+                    },
+                    "feature": {
+                      "files": [
+                        {
+                          "path": "src/akkal.ts",
+                          "content": "//? hello akkal"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

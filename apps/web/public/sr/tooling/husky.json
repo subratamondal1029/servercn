@@ -1,5 +1,4 @@
 {
-  "$schema": "https://servercn.vercel.app/schema/tooling.registry.json",
   "slug": "husky",
   "templates": {
     "base": {

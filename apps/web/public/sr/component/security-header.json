@@ -1,5 +1,4 @@
 {
-  "$schema": "https://servercn.vercel.app/schema/component.registry.json",
   "slug": "security-header",
   "runtimes": {
     "node": {
