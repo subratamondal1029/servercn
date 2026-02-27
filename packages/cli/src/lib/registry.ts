@@ -48,17 +48,6 @@ export async function getRegistry<T extends keyof RegistryMap>(
 
     return fs.readJSON(filePath);
   } else {
-    // Production: Try local built files first if in monorepo (for testing), else fetch
-    const localBuiltPath = path.join(
-      paths.outputBase,
-      type,
-      `${registryItemName}.json`
-    );
-
-    if (await fs.pathExists(localBuiltPath)) {
-      return fs.readJSON(localBuiltPath);
-    }
-
     // Fetch from SERVERCN_URL
     const url = `${SERVERCN_URL}/sr/${type}/${registryItemName}.json`;
     try {
