@@ -6,5 +6,6 @@ export const highlighter = {
   info: kleur.cyan,
   success: kleur.green,
   create: kleur.blue,
-  mute: kleur.dim
+  mute: kleur.dim,
+  magenta: kleur.magenta
 };

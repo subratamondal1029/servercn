@@ -5,6 +5,8 @@ import type { RegistryData, RegistryType } from "@/types";
 import { highlighter } from "@/utils/highlighter";
 import { logger } from "@/utils/logger";
 
+import Table from "cli-table3";
+
 export type listOptionType = {
   json?: boolean;
   all?: boolean;
@@ -21,9 +23,6 @@ type listOverviewType = {
   }[];
 };
 
-function padStart(num: number = 0) {
-  return num.toString().padStart(2, "0");
-}
 
 export async function listOverview(options: listOptionType) {
   const components = await loadRegistryItems("component", options.local);
@@ -72,33 +71,38 @@ export async function listOverview(options: listOptionType) {
     ]
   };
 
+  const table = new Table({
+    head: [
+      highlighter.error("type"),
+      highlighter.error("total"),
+      highlighter.error("alias"),
+      highlighter.error("command")
+    ],
+    colWidths: [12, 8, 8, 28]
+  });
+  data.types.forEach(type => {
+    table.push([
+      highlighter.create(type.type),
+      type.total,
+      highlighter.warn(type.alias),
+      highlighter.info(type.command)
+    ]);
+  });
+
   if (options?.json) {
     logger.break();
     process.stdout.write(JSON.stringify(data, null, 2));
     logger.break();
     return;
   }
-
   logger.break();
-  logger.info("ServerCN Registry Overview");
-  console.log(
-    `${highlighter.create(`
-───────────────────────────────────────────────────────────
-│ Type         │ alias    │ Total │ Command                │
-───────────────────────────────────────────────────────────
-│ Components   │   cp     │  ${padStart(components.length)}   │ npx servercn-cli ls cp │ 
-│ Blueprints   │   bp     │  ${padStart(blueprints.length)}   │ npx servercn-cli ls bp │
-│ Foundations  │   fd     │  ${padStart(foundations.length)}   │ npx servercn-cli ls fd │
-│ Tooling      │   tl     │  ${padStart(toolings.length)}   │ npx servercn-cli ls tl │
-│ Schemas      │   sc     │  ${padStart(schemas.length)}   │ npx servercn-cli ls sc │
-───────────────────────────────────────────────────────────`)}`
-  );
+  logger.log(table.toString());
   logger.log(`
- Explore:
+ ${highlighter.create("Explore:")}
  npx servercn-cli ls <type | alias>
  npx servercn-cli ls <type | alias> --json
 
- Examples:
+ ${highlighter.create("Examples:")}
  npx servercn-cli ls component
  npx servercn-cli ls cp
  npx servercn-cli ls foundation
@@ -106,6 +110,7 @@ export async function listOverview(options: listOptionType) {
  npx servercn-cli ls schema
  npx servercn-cli ls sc --json
 `);
+  logger.break();
 }
 
 type listRegistryDataType = {
@@ -116,6 +121,7 @@ type listRegistryDataType = {
   items: {
     name: string;
     command: string;
+    frameworks?: string[];
   }[];
 };
 
@@ -130,7 +136,9 @@ export async function listComponents(options: listOptionType) {
     total: components.length,
     items: components.map(c => ({
       name: c.slug,
-      command: `npx servercn-cli add ${c.slug}`
+      command: `npx servercn-cli add ${c.slug}`,
+      ...(c?.frameworks &&
+        c.frameworks.length > 0 && { framework: c.frameworks })
     }))
   } satisfies listRegistryDataType;
 
@@ -140,17 +148,27 @@ export async function listComponents(options: listOptionType) {
     return;
   }
 
-  logger.break();
-  logger.info("Available Components");
-  components.map((c, i) => {
-    logger.log(` ${i + 1}. ${c.slug}`);
+  const table = new Table({
+    head: [
+      highlighter.create("s.no"),
+      highlighter.create("name"),
+      highlighter.create("command"),
+      highlighter.create("frameworks")
+    ],
+    colWidths: [6, 26, 46, 26]
   });
   logger.break();
-  logger.info(`Usage:`);
-  logger.muted(` Run: npx servercn-cli add <component-name>`);
-  logger.muted(` Ex: npx servercn-cli add email-service`);
-  logger.muted(` Ex: npx servercn-cli add async-handler jwt-utils`);
-  logger.log(` Learn more: ${SERVERCN_URL}/components`);
+  logger.log(highlighter.create("Available Component"));
+  components.map((c, i) => {
+    table.push([
+      i + 1,
+      c.slug,
+      `npx servercn-cli add ${c.slug}`,
+      (c?.frameworks && c.frameworks.join(", ")) || ""
+    ]);
+  });
+  logger.log(table.toString());
+  logger.info(` Learn more: ${SERVERCN_URL}/components`);
   logger.break();
 }
 
@@ -165,7 +183,8 @@ export async function listFoundations(options: listOptionType) {
       .sort((a, b) => a.slug.localeCompare(b.slug))
       .map(c => ({
         name: c.slug,
-        command: `npx servercn-cli init ${c.slug}`
+        command: `npx servercn-cli init ${c.slug}`,
+        ...(c?.frameworks && c.frameworks.length > 0 && { frameworks: c.frameworks })
       }))
   } satisfies listRegistryDataType;
 
@@ -175,19 +194,23 @@ export async function listFoundations(options: listOptionType) {
     return;
   }
 
-  logger.break();
-  logger.info("Available Foundations");
-  foundations.map((c, i) => {
-    logger.log(` ${i + 1}. ${c.slug}`);
+  const table = new Table({
+    head: [
+      highlighter.create("s.no"),
+      highlighter.create("name"),
+      highlighter.create("command"),
+      highlighter.create("frameworks")
+    ],
+    colWidths: [6, 26, 46, 26]
   });
+
   logger.break();
-  logger.info(`Usage:`);
-  logger.muted(` Run: npx servercn-cli init <foundation-name>`);
-  logger.muted(` Ex: npx servercn-cli init express-server`);
-  logger.muted(` Ex: npx servercn-cli init drizzle-mysql-starter`);
-  logger.muted(` Ex: npx servercn-cli init drizzle-pg-starter`);
-  logger.muted(` Ex: npx servercn-cli init mongoose-starter`);
-  logger.log(` Learn more: ${SERVERCN_URL}/foundations`);
+  logger.log(highlighter.create("Available Foundation"));
+  foundations.map((c, i) => {
+    table.push([i + 1, c.slug, `npx servercn-cli init ${c.slug}`, (c?.frameworks && c.frameworks.join(", ")) || ""]);
+  });
+  logger.log(table.toString());
+  logger.info(`Learn more: ${SERVERCN_URL}/foundations`);
   logger.break();
 }
 
@@ -211,19 +234,22 @@ export async function listTooling(options: listOptionType) {
     return;
   }
 
-  logger.break();
-  logger.info("Available Tooling");
-  toolings.map((c, i) => {
-    logger.log(` ${i + 1}. ${c.slug}`);
+  const table = new Table({
+    head: [
+      highlighter.create("s.no"),
+      highlighter.create("name"),
+      highlighter.create("command")
+    ],
+    colWidths: [6, 26, 46]
   });
+
   logger.break();
-  logger.info(`Usage:`);
-  logger.muted(` Run: npx servercn-cli add tl <tooling-name>`);
-  logger.muted(` Ex: npx servercn-cli add tl commitlint`);
-  logger.muted(` Ex: npx servercn-cli add tl prettier`);
-  logger.muted(` Ex: npx servercn-cli add tl lint-staged`);
-  logger.muted(` Ex: npx servercn-cli add tl eslint husky typescript `);
-  logger.log(` Learn more: ${SERVERCN_URL}/docs`);
+  logger.log(highlighter.create("Available Tooling"));
+  toolings.map((c, i) => {
+    table.push([i + 1, c.slug, `npx servercn-cli add tl ${c.slug}`]);
+  });
+  logger.log(table.toString());
+  logger.info(`Learn more: ${SERVERCN_URL}/docs`);
   logger.break();
 }
 
@@ -239,7 +265,8 @@ export async function listSchemas(options: listOptionType) {
       .sort((a, b) => a.slug.localeCompare(b.slug))
       .map(c => ({
         name: c.slug,
-        command: `npx servercn-cli add sc ${c.slug}`
+        command: `npx servercn-cli add sc ${c.slug}`,
+        ...(c?.frameworks && c.frameworks.length > 0 && { frameworks: c.frameworks })
       }))
   } satisfies listRegistryDataType;
 
@@ -248,18 +275,25 @@ export async function listSchemas(options: listOptionType) {
     logger.break();
     return;
   }
-  logger.break();
-  logger.info("Available Schemas");
 
-  schemas.map((c, i) => {
-    logger.log(` ${i + 1}. ${c.slug}`);
+  const table = new Table({
+    head: [
+      highlighter.create("s.no"),
+      highlighter.create("name"),
+      highlighter.create("command"),
+      highlighter.create("frameworks")
+    ],
+    colWidths: [6, 26, 46, 26]
   });
+
   logger.break();
-  logger.info(`Usage:`);
-  logger.muted(` Run: npx servercn-cli add schema <schema-name>`);
-  logger.muted(` Ex: npx servercn-cli add sc auth`);
-  logger.muted(` Ex: npx servercn-cli add sc auth/user`);
-  logger.log(` Learn more: ${SERVERCN_URL}/schemas`);
+  logger.log(highlighter.create("Available Schemas"));
+  schemas.map((c, i) => {
+    table.push([i + 1, c.slug, `npx servercn-cli add sc ${c.slug}`, (c?.frameworks && c.frameworks.join(", ")) || ""]);
+  });
+  logger.log(table.toString());
+
+  logger.info(`Learn more: ${SERVERCN_URL}/schemas`);
   logger.break();
 }
 
@@ -273,7 +307,8 @@ export async function listBlueprints(options: listOptionType) {
     total: blueprints.length,
     items: blueprints.map(c => ({
       name: c.slug,
-      command: `npx servercn-cli add bp ${c.slug}`
+      command: `npx servercn-cli add bp ${c.slug}`,
+      ...(c?.frameworks && c.frameworks.length > 0 && { frameworks: c.frameworks })
     }))
   } satisfies listRegistryDataType;
 
@@ -283,16 +318,22 @@ export async function listBlueprints(options: listOptionType) {
     return;
   }
 
-  logger.break();
-  logger.info("Available Blueprints");
-  blueprints.map((c, i) => {
-    logger.log(` ${i + 1}. ${c.slug}`);
+  const table = new Table({
+    head: [
+      highlighter.create("s.no"),
+      highlighter.create("name"),
+      highlighter.create("command"),
+      highlighter.create("frameworks")
+    ],
+    colWidths: [6, 26, 46, 26]
   });
+
   logger.break();
-  logger.info(`Usage:`);
-  logger.muted(` Run: npx servercn-cli add blueprint <blueprint-name>`);
-  logger.muted(` Ex: npx servercn-cli add bp stateless-auth`);
-  logger.log(` Learn more: ${SERVERCN_URL}/blueprints`);
+  logger.log(highlighter.create("Available Blueprints"));
+  blueprints.map((c, i) => {
+    table.push([i + 1, c.slug, `npx servercn-cli add bp ${c.slug}`, (c?.frameworks && c.frameworks.join(", ")) || ""]);
+  });
+  logger.info(`Learn more: ${SERVERCN_URL}/blueprints`);
   logger.break();
 }
 

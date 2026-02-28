@@ -20,6 +20,7 @@ export type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 export type RegistryData = {
   type: RegistryType;
   slug: string;
+  frameworks?: string[];
 };
 
 export type ConflictStrategy = "skip" | "overwrite" | "error";
