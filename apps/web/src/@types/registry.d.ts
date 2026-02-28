@@ -3,12 +3,15 @@ interface ISchema {
   slug: string;
 }
 
+type Framework = "express" | "nestjs";
+
 export interface IRegistryItems {
   slug: string;
   title: string;
   description?: string;
   type: string;
   status: string;
+  frameworks?: string[]; // List of supported frameworks: ["express", "nestjs"]
   docs?: string;
   url?: string;
   meta?: {
