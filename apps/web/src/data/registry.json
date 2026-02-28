@@ -1,5 +1,5 @@
 {
-  "$schema": "https://servercn.vercel.app/schema/registry.json",
+  "$schema": "http://localhost:3000/schema/registry.json",
   "name": "ServerCN",
   "homepage": "https://servercn.vercel.app",
   "author": "Akkal Dhami",
@@ -74,6 +74,7 @@
       "description": "JWT Utilities for JSON Web Token authentication with access & refresh token support for Express",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/jwt-utils"
     },
     {
@@ -82,6 +83,7 @@
       "description": "Centralized error handling for Express applications using TypeScript.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/global-error-handler"
     },
     {
@@ -90,6 +92,7 @@
       "description": "A lightweight, production-ready error handling utility for Express applications.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/error-handler"
     },
     {
@@ -98,14 +101,16 @@
       "description": "A standardized, type-safe API response wrapper for Express applications.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/response-formatter"
     },
     {
       "slug": "async-handler",
       "title": "Async Request Handler",
-      "description": "The Async Handler component is a foundational Express utility that ensures all errors thrown inside asynchronous route handlers are reliably captured and forwarded to Express’s global error middleware.",
+      "description": "The Async Handler component is a foundational Express utility that ensures all errors thrown inside asynchronous route handlers are reliably captured and forwarded to Express's global error middleware.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/async-handler"
     },
     {
@@ -114,6 +119,7 @@
       "description": "The Password Hashing component provides a standardized way to hash passwords in ServerCN using bcryptjs, argon2, pbkdf2, scrypt.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/password-hashing"
     },
     {
@@ -122,6 +128,7 @@
       "description": "Centralized, type-safe HTTP status codes for consistent API responses.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/http-status-codes"
     },
     {
@@ -130,6 +137,7 @@
       "description": "Auth Verification Middleware protects private routes by validating user authentication using JWT access tokens and refresh tokens.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/verify-auth-middleware"
     },
     {
@@ -138,6 +146,7 @@
       "description": "Structured and configurable logging for Node.js applications using Winston or Pino.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/logger"
     },
     {
@@ -146,6 +155,7 @@
       "description": "The File Upload component provides a standardized way to handle file uploads in ServerCN using Cloudinary as the storage provider.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/file-upload-cloudinary"
     },
     {
@@ -154,6 +164,7 @@
       "description": "The File Upload component provides a standardized way to handle file uploads in ServerCN using ImageKit as the storage provider.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/file-upload-imagekit"
     },
     {
@@ -162,6 +173,7 @@
       "description": "The Send Email component provides a standardized way to send emails in ServerCN using nodemailer as the email service provider.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/email-service"
     },
     {
@@ -170,6 +182,7 @@
       "description": "The Not Found Handler component provides a standardized way to handle not found routes in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/not-found-handler"
     },
     {
@@ -178,6 +191,7 @@
       "description": "The Request Validator (Zod) middleware provides a type-safe and declarative way to validate incoming HTTP requests in ServerCN using Zod.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/request-validator"
     },
     {
@@ -186,6 +200,7 @@
       "description": "Production-ready health check endpoints for monitoring API status, database connectivity, and system health in Express applications.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/health-check"
     },
     {
@@ -194,6 +209,7 @@
       "description": "The Google OAuth component provides a standardized way to handle Google OAuth authentication in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/google-oauth"
     },
     {
@@ -202,6 +218,7 @@
       "description": "The Graceful Shutdown Handler ensures that your ServerCN application terminates safely and predictably when the process receives shutdown signals (e.g. SIGTERM, SIGINT).",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/shutdown-handler"
     },
     {
@@ -210,6 +227,7 @@
       "description": "The Role Based Access Control component provides a standardized way to handle role based access control in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/rbac"
     },
     {
@@ -218,6 +236,7 @@
       "description": "The Rate Limiter component provides a standardized way to handle rate limiting in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/rate-limiter"
     },
     {
@@ -226,6 +245,7 @@
       "description": "The GitHub & Google OAuth component provides a standardized way to handle GitHub & Google OAuth authentication in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/github-google-oauth"
     },
     {
@@ -234,6 +254,7 @@
       "description": "The GitHub OAuth component provides a standardized way to handle GitHub OAuth authentication in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/github-oauth"
     },
     {
@@ -242,6 +263,7 @@
       "description": "A type-safe environment variable configuration using Zod and Dotenv for Express applications.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/env-config"
     },
     {
@@ -250,6 +272,7 @@
       "description": "Automated OpenAPI documentation and interactive UI for Express APIs using Swagger.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/swagger-docs"
     },
     {
@@ -258,6 +281,7 @@
       "description": "The Security Headers component provides a standardized way to handle security headers in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/components/security-header"
     },
     {
@@ -266,6 +290,7 @@
       "description": "The Validate ObjectId Middleware component provides a standardized way to validate MongoDB ObjectIds in ServerCN.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/validate-objectid"
     },
     {
@@ -274,6 +299,7 @@
       "description": "Cryptographically secure utility functions for generating OTPs, random tokens, and unique identifiers for authentication workflows.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/generate-otp-token"
     },
     {
@@ -282,6 +308,7 @@
       "description": "The Background Jobs component provides a standardized way to schedule recurring tasks and background jobs in ServerCN using node-cron.",
       "type": "component",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/components/background-jobs"
     },
     {
@@ -290,6 +317,7 @@
       "description": "A robust Express.js server foundation with TypeScript, error handling, and structured logging.",
       "type": "foundation",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/foundations/express-server"
     },
     {
@@ -298,6 +326,7 @@
       "description": "A production-ready MongoDB foundation with Mongoose, featuring schema validation and type safety.",
       "type": "foundation",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/foundations/mongoose-starter"
     },
     {
@@ -306,6 +335,7 @@
       "description": "A production-ready MySQL foundation using Drizzle ORM for type-safe database interactions.",
       "type": "foundation",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/foundations/drizzle-mysql-starter"
     },
     {
@@ -314,6 +344,7 @@
       "description": "A production-ready PostgreSQL foundation using Drizzle ORM for type-safe database interactions.",
       "type": "foundation",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/foundations/drizzle-pg-starter"
     },
     {
@@ -370,6 +401,7 @@
       "description": "The Stateless Authentication component provides a standardized way to handle stateless authentication in ServerCN using JWT access tokens and refresh tokens.",
       "type": "blueprint",
       "status": "stable",
+      "frameworks": ["express"],
       "docs": "/docs/blueprints/stateless-auth",
       "meta": {
         "databases": [
@@ -395,6 +427,7 @@
       "description": "Authentication domain schemas including User, OTP, and Session models with support for multiple databases.",
       "type": "schema",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/schemas/auth",
       "meta": {
         "databases": [
@@ -419,6 +452,7 @@
       "description": "A production-ready Todo schema with support for MongoDB, PostgreSQL, and MySQL.",
       "type": "schema",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/schemas/todo",
       "meta": {
         "databases": [
@@ -443,6 +477,7 @@
       "description": "A production-ready Banking schema with support for MongoDB, PostgreSQL, and MySQL.",
       "type": "schema",
       "status": "stable",
+      "frameworks": ["express", "nestjs"],
       "docs": "/docs/schemas/banking-app",
       "meta": {
         "databases": [
