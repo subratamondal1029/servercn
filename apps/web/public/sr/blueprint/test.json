@@ -12,6 +12,7 @@
                     "runtime": [],
                     "dev": []
                   },
+                  "env": ["TEST"],
                   "architectures": {
                     "mvc": {
                       "files": [
