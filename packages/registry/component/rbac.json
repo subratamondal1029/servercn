@@ -10,8 +10,8 @@
             "feature": "rbac/feature"
           },
           "dependencies": {
-            "runtime": [""],
-            "dev": [""]
+            "runtime": ["dotenv-flow"],
+            "dev": []
           },
           "env": []
         }
