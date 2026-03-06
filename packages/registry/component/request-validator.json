@@ -10,8 +10,8 @@
             "feature": "request-validator/feature"
           },
           "dependencies": {
-            "runtime": ["zod"],
-            "dev": [""]
+            "runtime": ["zod", "dotenv-flow"],
+            "dev": []
           },
           "env": []
         }

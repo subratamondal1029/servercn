@@ -1,5 +1,5 @@
 import express, { type Application } from "express";
-import "dotenv/config";
+import "dotenv-flow/config";
 import { logger } from "./utils/pino-logger";
 import { httpLogger } from "./middlewares/logger.middleware";
 

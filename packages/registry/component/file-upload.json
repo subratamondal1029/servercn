@@ -14,7 +14,7 @@
                   "express",
                   "pino",
                   "pino-pretty",
-                  "dotenv",
+                  "dotenv-flow",
                   "multer",
                   "cloudinary"
                 ],
@@ -38,7 +38,7 @@
                 "runtime": [
                   "pino",
                   "pino-pretty",
-                  "dotenv",
+                  "dotenv-flow",
                   "multer",
                   "@imagekit/nodejs"
                 ],

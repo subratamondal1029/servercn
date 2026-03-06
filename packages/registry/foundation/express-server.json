@@ -13,6 +13,7 @@
             "runtime": [
               "express",
               "cors",
+              "dotenv-flow",
               "helmet",
               "cookie-parser",
               "pino",
@@ -23,7 +24,6 @@
             "dev": [
               "@types/express",
               "typescript",
-              "dotenv",
               "tsx",
               "tsc-alias",
               "morgan",

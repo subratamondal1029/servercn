@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import "dotenv/config";
+import "dotenv-flow/config";
 
 import { errorHandler } from "./middlewares/error-handler";
 import { logger } from "./utils/logger";
